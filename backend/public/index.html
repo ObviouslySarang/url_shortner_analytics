@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        .card { background: white; border-radius: 8px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        input, button { padding: 10px 16px; border-radius: 4px; border: 1px solid #ddd; font-size: 14px; }
+        input { width: 100%; margin-bottom: 12px; }
+        button { background: #0066ff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0052cc; }
+        .error { color: #e53e3e; margin-bottom: 12px; }
+        .hidden { display: none; }
+        .url-list { list-style: none; }
+        .url-list li { padding: 12px 0; border-bottom: 1px solid #eee; }
+        .url-list li:last-child { border-bottom: none; }
+        .short-url { color: #0066ff; font-weight: bold; }
+        .clicks { color: #666; font-size: 12px; }
+        h1 { margin-bottom: 20px; }
+        h2 { margin-bottom: 16px; font-size: 18px; }
+        nav { display: flex; gap: 12px; margin-bottom: 20px; }
+        nav button { background: #666; }
+    </style>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+
+    <!-- Auth Section -->
+    <div id="auth-section" class="card">
+        <h2 id="auth-title">Login</h2>
+        <div id="auth-error" class="error hidden"></div>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="handleAuth()">Submit</button>
+        <p style="margin-top: 12px; font-size: 14px;">
+            <a href="#" id="toggle-auth" onclick="toggleAuth(event)">Don't have an account? Register</a>
+        </p>
+    </div>
+
+    <!-- Dashboard (shown when logged in) -->
+    <div id="dashboard" class="hidden">
+        <nav>
+            <span id="user-email" style="flex:1; line-height: 36px;"></span>
+            <button onclick="logout()">Logout</button>
+        </nav>
+
+        <div class="card">
+            <h2>Shorten a URL</h2>
+            <div id="shorten-error" class="error hidden"></div>
+            <input type="url" id="long-url" placeholder="https://example.com/very-long-url">
+            <button onclick="shortenUrl()">Shorten</button>
+            <div id="shorten-result" class="hidden" style="margin-top: 12px;"></div>
+        </div>
+
+        <div class="card">
+            <h2>Your URLs</h2>
+            <ul id="url-list" class="url-list">
+                <li>Loading...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
