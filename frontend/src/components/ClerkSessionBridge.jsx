@@ -34,7 +34,9 @@ export default function ClerkSessionBridge() {
       if (!isSignedIn) {
         if (syncedUserIdRef.current) {
           syncedUserIdRef.current = "";
-          await apiFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+          await apiFetch("/api/auth/logout", { method: "POST" }).catch(
+            () => {},
+          );
           window.dispatchEvent(new Event("clerk-auth-cleared"));
         }
 
