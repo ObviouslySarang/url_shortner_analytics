@@ -20,5 +20,8 @@
     "express-rate-limit": "^8.2.0",
     "express-session": "^1.19.0",
     "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "@express-rate-limit/tsconfig": "^1.0.5"
   }
 }
