@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AuthPanel from "./components/AuthPanel";
 import Dashboard from "./components/Dashboard";
+import { apiFetch } from "./utils/api";
 
 export default function App() {
   const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
@@ -60,7 +61,7 @@ export default function App() {
 
   async function checkSession() {
     try {
-      const res = await fetch("/api/auth/me");
+      const res = await apiFetch("/api/auth/me");
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
@@ -76,7 +77,7 @@ export default function App() {
     setUrlsError("");
 
     try {
-      const res = await fetch("/api/urls");
+      const res = await apiFetch("/api/urls");
       const data = await res.json();
 
       if (!res.ok) {
@@ -125,7 +126,7 @@ export default function App() {
     setAnalyticsError("");
 
     try {
-      const res = await fetch(`/api/urls/${shortCode}/stats`);
+      const res = await apiFetch(`/api/urls/${shortCode}/stats`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -160,7 +161,7 @@ export default function App() {
 
     try {
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
-      const res = await fetch(endpoint, {
+      const res = await apiFetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(authForm),
@@ -186,7 +187,7 @@ export default function App() {
   }
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await apiFetch("/api/auth/logout", { method: "POST" });
     resetLocalSessionState();
 
     if (clerkEnabled) {
@@ -207,7 +208,7 @@ export default function App() {
         payload.customCode = trimmedCustomCode;
       }
 
-      const res = await fetch("/api/shorten", {
+      const res = await apiFetch("/api/shorten", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

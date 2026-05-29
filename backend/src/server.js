@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const fs = require("fs");
 const https = require("https");
+const cors = require("cors");
 const express = require("express");
 const session = require("express-session");
 const pgSession = require("connect-pg-simple")(session);
@@ -20,6 +21,22 @@ const frontendDistPath = path.join(__dirname, "..", "..", "frontend", "dist");
 const legacyPublicPath = path.join(__dirname, "..", "public");
 
 app.set("trust proxy", 1);
+
+const rawCorsOrigins =
+  process.env.CORS_ORIGINS || process.env.FRONTEND_URL || "";
+const corsOrigins = rawCorsOrigins
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+if (corsOrigins.length > 0) {
+  app.use(
+    cors({
+      origin: corsOrigins,
+      credentials: true,
+    }),
+  );
+}
 
 if (process.env.CLERK_SECRET_KEY) {
   app.use(clerkMiddleware());
@@ -50,8 +67,9 @@ app.use(
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       httpOnly: true, // JavaScript can't access the cookie
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure:
+        corsOrigins.length > 0 ? true : process.env.NODE_ENV === "production",
+      sameSite: corsOrigins.length > 0 ? "none" : "lax",
     },
   }),
 );

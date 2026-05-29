@@ -1,5 +1,6 @@
 import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 import { useEffect, useRef } from "react";
+import { apiFetch } from "../utils/api";
 
 export default function ClerkSessionBridge() {
   const { isLoaded, isSignedIn, getToken } = useAuth();
@@ -33,7 +34,7 @@ export default function ClerkSessionBridge() {
       if (!isSignedIn) {
         if (syncedUserIdRef.current) {
           syncedUserIdRef.current = "";
-          await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+          await apiFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
           window.dispatchEvent(new Event("clerk-auth-cleared"));
         }
 
@@ -54,7 +55,7 @@ export default function ClerkSessionBridge() {
         return;
       }
 
-      const res = await fetch("/api/auth/clerk/sync", {
+      const res = await apiFetch("/api/auth/clerk/sync", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
